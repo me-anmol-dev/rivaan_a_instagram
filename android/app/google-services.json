@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "700394767322",
+    "project_id": "rivaan-ad910",
+    "storage_bucket": "rivaan-ad910.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700394767322:android:af87f7e3cc82d45b16f6e3",
+        "android_client_info": {
+          "package_name": "com.example.rivaan_a_instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700394767322-c4kinlcdq9gro6em0eq7bm06lp05s76q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3zw-gUv68yMMiXcYp0FI2rGxwniTuAwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700394767322-c4kinlcdq9gro6em0eq7bm06lp05s76q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700394767322-go7r0nt4ku35mo6c3c8svh5n8n4i2bdc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rivaanAInstagram"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
