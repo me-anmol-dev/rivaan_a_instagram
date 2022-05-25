@@ -95,6 +95,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     snapshot.data!.docs[index]['postUrl'],
                     fit: BoxFit.cover,
                   ),
+                  // For Web as well as Mobile
                   staggeredTileBuilder: (index) => MediaQuery.of(context)
                               .size
                               .width >

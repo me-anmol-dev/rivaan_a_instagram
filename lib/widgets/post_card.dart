@@ -6,6 +6,7 @@ import 'package:rivaan_a_instagram/providers/user_provider.dart';
 import 'package:rivaan_a_instagram/resources/firestore_methods.dart';
 import 'package:rivaan_a_instagram/screens/comments_screen.dart';
 import 'package:rivaan_a_instagram/utilities/color.dart';
+import 'package:rivaan_a_instagram/utilities/global_variables.dart';
 import 'package:rivaan_a_instagram/utilities/utilities.dart';
 
 import 'like_animation.dart';
@@ -47,10 +48,17 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
+    final width = MediaQuery.of(context).size.width;
 
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10),
+      // Border for web
+      decoration: BoxDecoration(
+          border: Border.all(
+              color: width > webScreenSize
+                  ? secondaryColor
+                  : mobileBackgroundColor)),
       child: Column(
         children: [
           // HEADER SECTION
