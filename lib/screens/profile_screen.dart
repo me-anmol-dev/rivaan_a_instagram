@@ -9,15 +9,15 @@ import '../utilities/utilities.dart';
 import '../widgets/follow_button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String uid;
-  const ProfileScreen({Key? key, required this.uid}) : super(key: key);
+  final String currentOrFoundUid;
+  const ProfileScreen({Key? key, required this.currentOrFoundUid}) : super(key: key);
 
   @override
   ProfileScreenState createState() => ProfileScreenState();
 }
 
 class ProfileScreenState extends State<ProfileScreen> {
-  var userPostedData = {};
+  var givenUserData = {};
   int postLen = 0;
   int followers = 0;
   int following = 0;
@@ -35,7 +35,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     try {
       var userSnap = await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.uid)
+          .doc(widget.currentOrFoundUid)
           .get();
 
       // get post Length
@@ -45,7 +45,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           .get();
 
       postLen = postSnap.docs.length;
-      userPostedData = userSnap.data()!;
+      givenUserData = userSnap.data()!;
       followers = userSnap.data()!['followers'].length;
       following = userSnap.data()!['following'].length;
       isFollowing = userSnap
@@ -68,7 +68,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               title: Text(
-                userPostedData['username'],
+                givenUserData['username'],
               ),
               centerTitle: false,
             ),
@@ -83,7 +83,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
-                              userPostedData['photoUrl'],
+                              givenUserData['photoUrl'],
                             ),
                             radius: 40,
                           ),
@@ -106,7 +106,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     FirebaseAuth.instance.currentUser!.uid ==
-                                            widget.uid
+                                            widget.currentOrFoundUid
                                     // widget.uid is from search results
                                         ? FollowButton(
                                             text: 'Sign Out',
@@ -138,7 +138,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                     FirebaseAuth.instance
                                                         .currentUser!.uid,
                                                     // followId
-                                                    userPostedData['uid'],
+                                                    givenUserData['uid'],
                                                   );
 
                                                   setState(() {
@@ -157,7 +157,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                       .followUser(
                                                     FirebaseAuth.instance
                                                         .currentUser!.uid,
-                                                    userPostedData['uid'],
+                                                    givenUserData['uid'],
                                                   );
 
                                                   setState(() {
@@ -179,7 +179,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           top: 15,
                         ),
                         child: Text(
-                          userPostedData['username'],
+                          givenUserData['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -191,7 +191,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           top: 1,
                         ),
                         child: Text(
-                          userPostedData['bio'],
+                          givenUserData['bio'],
                         ),
                       ),
                     ],
@@ -201,7 +201,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
                   future: FirebaseFirestore.instance
                       .collection('posts')
-                      .where('uid', isEqualTo: widget.uid)
+                      .where('uid', isEqualTo: widget.currentOrFoundUid)
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {

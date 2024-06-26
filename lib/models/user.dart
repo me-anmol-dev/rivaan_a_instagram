@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class User {
   final String email;
@@ -25,8 +24,8 @@ class User {
         'username': username,
         'email': email,
         'bio': bio,
-        'followers': [],
-        'following': [],
+        'followers': followers,
+        'following': following,
         'photoUrl': photoUrl,
       };
 

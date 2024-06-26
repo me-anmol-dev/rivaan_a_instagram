@@ -8,18 +8,22 @@ import 'package:rivaan_a_instagram/resources/storage_methods.dart';
 import '../models/user.dart' as model;
 
 class AuthMethods {
+  // Instantiate Firebase
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //
+  // (1) Getting User Info through Model
   Future<model.User> getUserDetails() async {
     // User currentUser = _auth.currentUser!;
+
+    // Step 1: Get Snapshot
     DocumentSnapshot snap =
         await _firestore.collection('users').doc(_auth.currentUser!.uid).get();
+    // Step 2: Download data to User Model
     return model.User.fromSnap(snap);
   }
 
-  // Sign Up
+  // (2) Sign Up
   Future<String> userSignUp({
     required String email,
     required String password,
@@ -30,48 +34,42 @@ class AuthMethods {
     String res = 'Some error occurred';
 
     try {
-      if (email.isNotEmpty ||
-          password.isNotEmpty ||
-          username.isNotEmpty ||
-          bio.isNotEmpty ||
-          file != null) {
-        if (file == null) return 'Picture not found';
-        // Register User
-        UserCredential cred = await _auth.createUserWithEmailAndPassword(
-            email: email, password: password);
+      // Step 1: Sign Up
+      UserCredential cred = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
 
-        debugPrint(cred.user!.uid);
+      debugPrint(cred.user!.uid);
 
-        String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePic', file, false);
+      // Step 2: Upload Profile Picture
+      String photoUrl = await StorageMethods()
+          .uploadImageToStorage('profilePic', file, false);
 
-        model.User user = model.User(
-          uid: cred.user!.uid,
-          username: username,
-          email: email,
-          bio: bio,
-          followers: [],
-          following: [],
-          photoUrl: photoUrl,
-        );
+      // Before toJson was passing this
+      // {
+      // 'uid': cred.user!.uid,
+      // 'username': username,
+      // 'email': email,
+      // 'bio': bio,
+      // 'followers': [],
+      // 'following': [],
+      // 'photoUrl': photoUrl,
+      // }
 
-        // Earlier was passing this
-        // {
-        // 'uid': cred.user!.uid,
-        // 'username': username,
-        // 'email': email,
-        // 'bio': bio,
-        // 'followers': [],
-        // 'following': [],
-        // 'photoUrl': photoUrl,
-        // }
+      // Step 3: Setting User to database
+      model.User user = model.User(
+        uid: cred.user!.uid,
+        username: username,
+        email: email,
+        bio: bio,
+        followers: [],
+        following: [],
+        photoUrl: photoUrl,
+      );
 
-        // Adding user to Database
-        await _firestore.collection('users').doc(cred.user!.uid).set(
-              user.toJson(),
-            );
-        res = 'success';
-      }
+      await _firestore.collection('users').doc(cred.user!.uid).set(
+            user.toJson(),
+          );
+      res = 'success';
     } on FirebaseException catch (err) {
       if (err.code == 'invalid-email') {
         res = 'The email is badly formatted';
@@ -84,7 +82,7 @@ class AuthMethods {
     return res;
   }
 
-  // Logging In
+// (3) Sign In
   Future<String> logInUser(
       {required String email, required String password}) async {
     String res = 'Some error occurred';
@@ -95,15 +93,14 @@ class AuthMethods {
         res = 'success';
       } else {
         res = 'Please enter all the fields';
-      } // else Ended
+      }
     } catch (err) {
       res = err.toString();
     }
-    // Last statement of Method
     return res;
   }
 
-  // Sign Out
+  // (4) SignOut
   Future<void> signOut() async {
     await _auth.signOut();
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rivaan_a_instagram/providers/user_provider.dart';
-
+// import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rivaan_a_instagram/utilities/global_variables.dart';
+import '../providers/provider_list.dart';
 
-class ResponsiveLayout extends StatefulWidget {
+class ResponsiveLayout extends ConsumerStatefulWidget {
   final Widget webScreenLayout;
   final Widget mobileScreenLayout;
 
@@ -15,23 +15,34 @@ class ResponsiveLayout extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ResponsiveLayout> createState() => _ResponsiveLayoutState();
+  ConsumerState createState() => _ResponsiveLayoutState();
 }
 
-class _ResponsiveLayoutState extends State<ResponsiveLayout> {
+class _ResponsiveLayoutState extends ConsumerState<ResponsiveLayout> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   addData();
+  // }
+
   @override
-  void initState() {
-    super.initState();
-    addData();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.watch(userProvider).refreshUser();
   }
 
-  addData() async {
-    final _userProvider = Provider.of<UserProvider>(context, listen: false);
-    await _userProvider.refreshUser();
-  }
+
+  // addData() async {
+  //   // final _userProvider = Provider.of<UserProvider>(context, listen: false);
+  //   // await _userProvider.refreshUser();
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > webScreenSize) {

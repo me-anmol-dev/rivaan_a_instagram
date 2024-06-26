@@ -30,25 +30,31 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     pageController.dispose();
   }
 
-  void navigationTapped(int page) {
-    pageController.jumpToPage(page);
-  }
-
-  void onPageChanged(int page) {
-    setState(() => _page = page);
-  }
+  // void navigationTapped(int page) {
+  //   pageController.jumpToPage(page);
+  // }
+  //
+  // void onPageChanged(int page) {
+  //   setState(() => _page = page);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
         controller: pageController,
-        onPageChanged: onPageChanged,
+        onPageChanged: (page) {
+          setState(() => _page = page);
+        },
         physics: const NeverScrollableScrollPhysics(),
         children: homeScreenItems,
+        // List of widgets
       ),
       bottomNavigationBar: CupertinoTabBar(
-        onTap: navigationTapped,
+        onTap: (int page) {
+          setState(() => pageController.jumpToPage(page));
+        },
+        currentIndex: _page,
         backgroundColor: mobileBackgroundColor,
         activeColor: primaryColor,
         items: [

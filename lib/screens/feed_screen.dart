@@ -30,10 +30,9 @@ class FeedScreen extends StatelessWidget {
                     onPressed: () {}, icon: const Icon(Icons.messenger_outline))
               ],
             ),
-      body: StreamBuilder(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -45,7 +44,7 @@ class FeedScreen extends StatelessWidget {
                 vertical: width > webScreenSize ? 15 : 0,
               ),
               child: PostCard(
-                snap: snapshot.data!.docs[i].data(),
+                postSnapshot: snapshot.data!.docs[i].data(),
               ),
             ),
           );

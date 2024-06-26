@@ -46,11 +46,26 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() => _image = selectedImage);
     } else {
       return;
+      // Picker Cancelled
     }
   }
 
   void signUpUser() async {
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _usernameController.text.isEmpty ||
+        _bioController.text.isEmpty) {
+      showSnackBar('Please check all the fields.', context);
+      return;
+    }
+
+    if (_image == null) {
+      showSnackBar('Please select Image.', context);
+      return;
+    }
+
     setState(() => _isLoading = true);
+
     String res = await AuthMethods().userSignUp(
       email: _emailController.text,
       password: _passwordController.text,
@@ -58,14 +73,17 @@ class _SignupScreenState extends State<SignupScreen> {
       bio: _bioController.text,
       file: _image!,
     );
-    print(res);
+
+    debugPrint(res);
 
     if (res != 'success') {
+      if (!mounted) return;
       showSnackBar(res, context);
     } else {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ResponsiveLayout(
+          builder: (context) => const ResponsiveLayout(
             mobileScreenLayout: MobileScreenLayout(),
             webScreenLayout: WebScreenLayout(),
           ),

@@ -1,22 +1,26 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rivaan_a_instagram/providers/provider_list.dart';
+
 import 'package:rivaan_a_instagram/providers/user_provider.dart';
 import 'package:rivaan_a_instagram/resources/firestore_methods.dart';
 import 'package:rivaan_a_instagram/utilities/color.dart';
 import 'package:rivaan_a_instagram/utilities/utilities.dart';
 
-class AddPostScreen extends StatefulWidget {
+class AddPostScreen extends ConsumerStatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddPostScreen> createState() => _AddPostScreenState();
+  _AddPostScreenState createState() => _AddPostScreenState();
 }
 
-class _AddPostScreenState extends State<AddPostScreen> {
+class _AddPostScreenState extends ConsumerState<AddPostScreen> {
   bool _isLoading = false;
   Uint8List? _file;
   final _descriptionController = TextEditingController();
@@ -91,7 +95,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
+    // final user = Provider.of<UserProvider>(context).getUser;
+    final user = ref.watch(userProvider).getUser;
 
     return _file == null
         ? Center(

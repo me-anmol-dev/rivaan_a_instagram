@@ -35,22 +35,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void logInUser() async {
     setState(() => _isLoading = true);
+
     String res = await AuthMethods().logInUser(
         email: _emailController.text, password: _passwordController.text);
 
     if (res == 'success') {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ResponsiveLayout(
+          builder: (context) => const ResponsiveLayout(
             mobileScreenLayout: MobileScreenLayout(),
             webScreenLayout: WebScreenLayout(),
           ),
         ),
       );
+
       setState(() => _isLoading = false);
     } else {
       //
       setState(() => _isLoading = false);
+      if (!mounted) return;
       showSnackBar(res, context);
     }
   }

@@ -1,22 +1,28 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rivaan_a_instagram/providers/provider_list.dart';
+
 import 'package:rivaan_a_instagram/utilities/color.dart';
 
 import '../providers/user_provider.dart';
 import '../resources/firestore_methods.dart';
 import '../widgets/comment_card.dart';
 
-class CommentsScreen extends StatefulWidget {
+class CommentsScreen extends ConsumerStatefulWidget {
   final snap;
 
   const CommentsScreen({Key? key, required this.snap}) : super(key: key);
 
   @override
-  State<CommentsScreen> createState() => _CommentsScreenState();
+  _CommentsScreenState createState() => _CommentsScreenState();
 }
 
-class _CommentsScreenState extends State<CommentsScreen> {
+
+class _CommentsScreenState extends ConsumerState<CommentsScreen> {
   final _commentController = TextEditingController();
 
   @override
@@ -27,7 +33,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).getUser;
+    // final user = Provider.of<UserProvider>(context).getUser;
+    final user = ref.watch(userProvider).getUser;
 
     return Scaffold(
       appBar: AppBar(

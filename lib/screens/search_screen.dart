@@ -56,7 +56,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ProfileScreen(
-                            uid: snapshot.data!.docs[index]['uid'],
+                            currentOrFoundUid: snapshot.data!.docs[index]['uid'],
                           ),
                         ),
                       ),

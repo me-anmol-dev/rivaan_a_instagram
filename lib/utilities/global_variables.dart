@@ -13,5 +13,5 @@ List<Widget> homeScreenItems = [
   SearchScreen(),
   AddPostScreen(),
   const Center(child: Text('Favourites')),
-  ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
+  ProfileScreen(currentOrFoundUid: FirebaseAuth.instance.currentUser!.uid),
 ];

@@ -15,9 +15,13 @@ class FirestoreMethods {
     // asking uid here because we don't want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
     try {
+      // Upload Post Pic
       String photoUrl =
           await StorageMethods().uploadImageToStorage('posts', file, true);
+
+      // Upload Post Data to Firestore
       String postId = const Uuid().v1(); // creates unique id based on time
+
       Post post = Post(
         description: description,
         uid: uid,
@@ -28,7 +32,9 @@ class FirestoreMethods {
         postUrl: photoUrl,
         profImage: profImage,
       );
+
       _firestore.collection('posts').doc(postId).set(post.toJson());
+
       res = "success";
     } catch (err) {
       res = err.toString();
@@ -36,6 +42,7 @@ class FirestoreMethods {
     return res;
   }
 
+  // Like Posts
   Future<void> likePost(String postId, String uid, List likes) async {
     try {
       if (likes.contains(uid)) {
@@ -52,7 +59,7 @@ class FirestoreMethods {
     }
   }
 
-  // Post comment
+  // Add comment to post
   Future<String> postComment(String postId, String text, String uid,
       String name, String profilePic) async {
     String res = "Some error occurred";
@@ -60,6 +67,7 @@ class FirestoreMethods {
       if (text.isNotEmpty) {
         // if the likes list contains the user uid, we need to remove it
         String commentId = const Uuid().v1();
+
         await _firestore
             .collection('posts')
             .doc(postId)
@@ -99,8 +107,10 @@ class FirestoreMethods {
     try {
       DocumentSnapshot snap =
           await _firestore.collection('users').doc(uid).get();
+
       List following = (snap.data()! as dynamic)['following'];
 
+      // Unfollow
       if (following.contains(followId)) {
         await _firestore.collection('users').doc(followId).update({
           'followers': FieldValue.arrayRemove([uid])
@@ -109,6 +119,8 @@ class FirestoreMethods {
         await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayRemove([followId])
         });
+
+        // Follow
       } else {
         await _firestore.collection('users').doc(followId).update({
           'followers': FieldValue.arrayUnion([uid])
